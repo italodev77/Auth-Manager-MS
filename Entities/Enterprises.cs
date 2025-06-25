@@ -7,7 +7,9 @@ namespace Auth_ms.Entities;
 [Table("TB_Enterprises")]
 public class Enterprises
 {
-    [Key] [Column("enterprise_id")] public int EnterpriseId { get; set; }
+    [Key] 
+    [Column("enterprise_id")] 
+    public int EnterpriseId { get; set; }
 
     [Required]
     [Column("enterprise_name", TypeName = "varchar(255)")]
@@ -15,7 +17,7 @@ public class Enterprises
     
     [Required]
     [Column("cnpj", TypeName = "varchar(14)")]
-    public string cnpj { get; set; } = string.Empty;
+    public string cnpj { get; set; }
 
 
     [Required]
