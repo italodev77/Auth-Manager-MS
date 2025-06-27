@@ -26,7 +26,6 @@ builder.Services.AddScoped<EnterpriseService>();
 
 
 
-// Registre os controllers
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -79,7 +78,6 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-// Adicione o serviço de autorização
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
