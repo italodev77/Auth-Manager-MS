@@ -15,7 +15,7 @@ public class EnterpriseController : ControllerBase
         _service = service;
     }
 
-    [HttpPost]
+    [HttpPost("create-enterprise")]
     public async Task<IActionResult> Create([FromBody] CreateEnterpriseDto dto)
     {
         try
@@ -43,7 +43,7 @@ public class EnterpriseController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut]
+    [HttpPut("update-enterprise")]
     public async Task<IActionResult> Update([FromBody] UpdateEnterpriseDto dto)
     {
         try

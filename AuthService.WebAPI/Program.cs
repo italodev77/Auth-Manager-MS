@@ -3,7 +3,6 @@ using Auth_ms.Config;
 using Auth_ms.Data;
 using Auth_ms.Repositories;
 using Auth_ms.Services;
-using AuthService.Application.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

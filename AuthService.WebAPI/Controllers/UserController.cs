@@ -15,24 +15,6 @@ namespace Auth_ms.Controllers
             _userService = userService;
         }
 
-        [HttpPost("criar")]
-        public async Task<IActionResult> Create([FromBody] RegisterDto dto)
-        {
-            try
-            {
-                var user = await _userService.CreateUserAsync(dto);
-                return CreatedAtAction(nameof(Create), new { id = user.Email }, user);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
-        }
-
         [HttpPut("atualizar")]
         public async Task<IActionResult> Update([FromBody] UpdateUserDto dto)
         {
