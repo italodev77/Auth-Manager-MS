@@ -9,14 +9,13 @@ using Auth_ms.Config; // Se seu TokenService estiver aí
 
 namespace Auth_ms.Controllers
 {
-    [Route("api/autenticacao")]
+    [Route("api/Autenticacao")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly ApiDbContext _context;
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly TokenService _tokenService;
-
         public AuthController(ApiDbContext context, TokenService tokenService)
         {
             _context = context;
@@ -25,36 +24,39 @@ namespace Auth_ms.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto model)
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            if (await _context.User.AnyAsync(u => u.email == model.Email))
+            if (await _context.User.AnyAsync(u => u.email == registerDto.Email))
                 return BadRequest("E-mail já está em uso.");
 
             var user = new User
             {
-                Email = model.Email,
-                hashPassword = _passwordHasher.HashPassword(null, model.Password),
+                email = registerDto.Email,
+                hashPassword = registerDto.Password,
             };
 
+            user.hashPassword = _passwordHasher.HashPassword(user, registerDto.Password);
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Register), new { email = user.Email }, "Usuário registrado com sucesso!");
+            var newUser = await _context.User.FirstOrDefaultAsync(u => u.email == registerDto.Email);
+            return CreatedAtAction(nameof(Register), new { email = newUser.email }, "Usuário registrado com sucesso!");
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto model)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == model.Email);
+            var user = await _context.User.FirstOrDefaultAsync(u => u.email == loginDto.Email);
             if (user == null)
                 return Unauthorized("Usuário não encontrado.");
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.hashPassword, model.Password);
+            var result = _passwordHasher.VerifyHashedPassword(user, user.hashPassword, loginDto.Password);
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Senha incorreta.");
-
+            
             var token = _tokenService.GenerateToken(user);
             return Ok(new { token });
         }
     }
 }
+

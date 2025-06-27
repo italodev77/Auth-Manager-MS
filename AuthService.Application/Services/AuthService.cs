@@ -1,28 +1,45 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Auth_ms.Data;
+using Auth_ms.Application.Contracts;
 using Auth_ms.Dtos;
 using Auth_ms.Entities;
-using Auth_ms.Config;
+using Auth_ms.Mappers;
+using Auth_ms.Repositories;
+using Auth_ms.Validations;
+using AuthService.Application.Contracts;
 
 namespace Auth_ms.Services;
 
-public class AuthService
+public class AuthService : IAuthService
 {
-    private readonly ApiDbContext _context;
+    private readonly IAuthService _authRepository;
     private readonly TokenService _tokenService;
     private readonly PasswordHasher<User> _passwordHasher;
 
-    public AuthService(ApiDbContext context, TokenService tokenService)
+    public AuthService(IAuth authRepository, ITokenService tokenService)
     {
-        _context = context;
+        _authRepository = authRepository;
         _tokenService = tokenService;
         _passwordHasher = new PasswordHasher<User>();
     }
 
+    public async Task RegisterAsync(RegisterDto dto)
+    {
+        var entity = UserMapper.ToEntity(dto);
+        var validation = UserValidator.ValidateCreate(entity);
+
+        if (!validation.IsValid)
+            throw new ArgumentException(string.Join("; ", validation.Errors));
+
+        var existing = await _authRepository.GetByEmailAsync(dto.Email);
+        if (existing != null)
+            throw new InvalidOperationException("E-mail já cadastrado.");
+
+        entity.hashPassword = _passwordHasher.HashPassword(null, dto.Password);
+        await _authRepository.AddAsync(entity);
+    }
+
     public async Task<TokenResponseDto> LoginAsync(LoginDto dto)
     {
-        var user = await _context.User.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        var user = await _authRepository.GetByEmailAsync(dto.Email);
         if (user == null)
             throw new UnauthorizedAccessException("Usuário não encontrado.");
 
@@ -31,26 +48,5 @@ public class AuthService
             throw new UnauthorizedAccessException("Senha incorreta.");
 
         return _tokenService.GenerateToken(user);
-    }
-
-    public async Task RegisterAsync(RegisterDto dto)
-    {
-        if (await _context.User.AnyAsync(u => u.Email == dto.Email))
-            throw new InvalidOperationException("E-mail já está em uso.");
-
-        if (string.IsNullOrWhiteSpace(dto.Password))
-            throw new ArgumentException("Senha não pode ser vazia.");
-
-        var user = new User
-        {
-            Name = dto.Name,
-            Email = dto.Email,
-            Role = "user",
-            Status = "active",
-            hashPassword = _passwordHasher.HashPassword(null, dto.Password)
-        };
-
-        _context.User.Add(user);
-        await _context.SaveChangesAsync();
     }
 }
