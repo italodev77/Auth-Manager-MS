@@ -39,4 +39,31 @@ public class Enterprises
     
     [Required]
     public EnterpriseStatus Status { get; set; } = EnterpriseStatus.Active;
+    
+    public void Update(
+        string? enterpriseName = null,
+        string? enterpriseEmail = null,
+        string? dbPath = null,
+        string? dbUsername = null,
+        string? enterpriseDbPassword = null,
+        EnterpriseStatus? status = null)
+    {
+        if (!string.IsNullOrWhiteSpace(enterpriseName))
+            EnterpriseName = enterpriseName;
+
+        if (!string.IsNullOrWhiteSpace(enterpriseEmail))
+            EnterpriseEmail = enterpriseEmail;
+
+        if (!string.IsNullOrWhiteSpace(dbPath))
+            DbPath = dbPath;
+
+        if (!string.IsNullOrWhiteSpace(dbUsername))
+            DbUsername = dbUsername;
+
+        if (!string.IsNullOrWhiteSpace(enterpriseDbPassword))
+            EnterpriseDbPassword = enterpriseDbPassword;
+
+        if (status.HasValue)
+            Status = status.Value;
+    }
 }

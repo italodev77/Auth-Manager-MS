@@ -1,12 +1,13 @@
 using System.Text;
 using Auth_ms.Config;
-using Auth_ms.Data;
 using Auth_ms.Repositories;
 using Auth_ms.Services;
+using AuthService.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 
 
 
@@ -15,6 +16,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApiDbContext>(options =>
     options.UseNpgsql(connectionString));
+
 
 
 builder.Services.AddScoped<TokenService>();

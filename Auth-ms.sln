@@ -1,11 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 #
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D1F6C3CA-DE7A-492B-94B6-4568819D8624}"
-	ProjectSection(SolutionItems) = preProject
-		compose.yaml = compose.yaml
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Domain", "AuthService.Domain\AuthService.Domain.csproj", "{C822A5C3-66AA-4062-BB18-96C964FCB8EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Application", "AuthService.Application\AuthService.Application.csproj", "{8D99A5AC-8EF2-4C2A-8B30-A70F61EBA2C6}"
@@ -36,5 +31,7 @@ Global
 		{82D84976-8049-4E9F-9171-1E14CE6DC6E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82D84976-8049-4E9F-9171-1E14CE6DC6E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82D84976-8049-4E9F-9171-1E14CE6DC6E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Auth_ms.Data;
 using Auth_ms.Dtos;
 using Auth_ms.Entities;
 using Auth_ms.Services;
-using Auth_ms.Config; // Se seu TokenService estiver aí
+using Auth_ms.Config;
+using AuthService.Infrastructure.Data; // Se seu TokenService estiver aí
 
 namespace Auth_ms.Controllers
 {

@@ -6,8 +6,7 @@ namespace Auth_ms.Dtos;
 
 public class RegisterDto
 {
-    [Required]
-    public string Name { get; set; } = string.Empty;
+    
 
     [Required]
     [EmailAddress]

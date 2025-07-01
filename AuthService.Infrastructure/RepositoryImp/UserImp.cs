@@ -1,5 +1,6 @@
-using Auth_ms.Data;
+
 using Auth_ms.Entities;
+using AuthService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auth_ms.Repositories;

@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 public class UpdateEnterpriseDto
 {
-    [Required]
-    public int EnterpriseId { get; set; }
 
     [Required]
     public string EnterpriseName { get; set; } = string.Empty;

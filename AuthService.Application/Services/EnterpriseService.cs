@@ -2,6 +2,8 @@ using Auth_ms.Dtos;
 using Auth_ms.Mappers;
 using Auth_ms.Repositories;
 using Auth_ms.Entities;
+using AuthService.Application.validations;
+using AuthService.Domain.shared;
 
 namespace Auth_ms.Services;
 
@@ -31,16 +33,28 @@ public class EnterpriseService
         return result == null ? null : EnterpriseMapper.ToResponseDto(result);
     }
 
-    public async Task<EnterpriseResponseDto> UpdateEnterpriseAsync(UpdateEnterpriseDto dto)
+    public async Task<Result<EnterpriseResponseDto>> UpdateEnterpriseAsync(UpdateEnterpriseDto dto)
     {
+        if (!CnpjValidator.IsValid(dto.Cnpj))
+            return Result<EnterpriseResponseDto>.Fail("CNPJ inválido.");
+
         var existing = await _enterpriseRepository.GetByCnpjAsync(dto.Cnpj);
         if (existing == null)
-            throw new InvalidOperationException("Empresa não encontrada.");
+            return Result<EnterpriseResponseDto>.Fail("Empresa não encontrada.");
 
-        var updated = EnterpriseMapper.ToEntity(dto);
-        var result = await _enterpriseRepository.UpdateAsync(updated);
-        return EnterpriseMapper.ToResponseDto(result);
+        existing.Update(
+            enterpriseName: dto.EnterpriseName,
+            enterpriseEmail: dto.EnterpriseEmail,
+            dbPath: dto.DbPath,
+            dbUsername: dto.DbUsername,
+            enterpriseDbPassword: dto.EnterpriseDbPassword,
+            status: dto.Status
+        );
+
+        var updated = await _enterpriseRepository.UpdateAsync(existing);
+        return Result<EnterpriseResponseDto>.Ok(EnterpriseMapper.ToResponseDto(updated));
     }
+
 
     public async Task<EnterpriseResponseDto> DeleteByCnpjAsync(string cnpj)
     {

@@ -23,7 +23,6 @@ public static class EnterpriseMapper
     {
         return new Enterprises
         {
-            EnterpriseId = dto.EnterpriseId,
             EnterpriseName = dto.EnterpriseName,
             cnpj = dto.Cnpj,
             EnterpriseEmail = dto.EnterpriseEmail,
